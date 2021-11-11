@@ -5,10 +5,12 @@ const getBaseURL = () => {
 };
 
 let style = `
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
   button {
     width: fit-content;
     height: fit-content;
     border-radius: 10px;
+    font-size: 30px;
     background-color: seagreen;
     color: white;
   }
@@ -17,8 +19,9 @@ let template = /*html*/`
     <video id="video" >
     </video>
     <br>
-    <button id="play">PLAY</button>
-    <button id="pause" hidden>PAUSE</button>
+    <button id="restart">RESTART</button>
+    <button id="play"><i class="fa fa-play"></i></button>
+    <button id="pause" hidden><i class="fa fa-pause"></i></button>
     <button id="info">GET INFO</button>
     <button id="mb-5s">-5S</button>
     <button id="fwd-5s">+5S</button>
