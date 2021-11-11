@@ -14,23 +14,43 @@ let style = `
     background-color: seagreen;
     color: white;
   }
+
+  span {
+    font-size: 24px;
+  }
+
+  .video-controls {
+    background: rgba(14, 32, 82, 0.8);
+    padding: 0 1.5rem;
+  }
+
+  #restart {
+    border: none;
+    background: none;
+    color: #000;
+  }
+  
 `;
 let template = /*html*/`
     <video id="video" >
     </video>
     <br>
-    <button id="restart">RESTART</button>
-    <button id="play"><i class="fa fa-play"></i></button>
-    <button id="pause" hidden><i class="fa fa-pause"></i></button>
-    <button id="info">GET INFO</button>
-    <button id="mb-5s">-5S</button>
-    <button id="fwd-5s">+5S</button>
-    <button id="speed" >SPEED</button>
-    <input type="range" id="volume-bar" title="volume" min="0" max="1" step="0.1" value="1">
-    <div class="time">
-      <time id="time-elapsed">00:00</time>
-      <span> / </span>
-      <time id="duration">00:00</time>
+    <div class="video-player">
+      <button id="restart"><span class="fa fa-undo"></span></button>
+      <div class="video-controls">
+        <span id="play"><i class="fa fa-play"></i></span>
+        <span id="pause" hidden><i class="fa fa-pause"></i></span>
+        <button id="info">GET INFO</button>
+        <button id="mb-5s">-5S</button>
+        <button id="fwd-5s">+5S</button>
+        <button id="speed" >SPEED</button>
+        <input type="range" id="volume-bar" title="volume" min="0" max="1" step="0.1" value="1">
+        <div class="time">
+          <time id="time-elapsed">00:00</time>
+          <span> / </span>
+          <time id="duration">00:00</time>
+        </div>
+      </div>
     </div>
    `;
 export default class MyVideoPlayer extends HTMLElement {
