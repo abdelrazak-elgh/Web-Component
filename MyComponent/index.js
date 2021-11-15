@@ -5,9 +5,7 @@ const getBaseURL = () => {
 let style = `
   @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
   button {
-    //border-radius: 10px;
     background-color: transparent;
-    color: white;
     border: none;
     padding: 0;
     margin-right: 0.8em;
@@ -16,14 +14,14 @@ let style = `
 
   .video-controls {
     background: rgba(14, 32, 82, 0.8);
-    padding: 0 1.5rem;
+    padding: 0.2rem 1.5rem;
     display; flex;
     flex-direction: column;
     //border: 1px dashed red;
   }
 
   .control-items {
-    border: 2px dashed black;
+    //border: 2px dashed black;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -41,7 +39,7 @@ let style = `
   .control-bar-right {
     display: inline-flex;
   }
-  
+
   .video-controls div {
     vertical-align: middle;
   }
@@ -50,7 +48,6 @@ let style = `
     display: flex;
     align-items: center;
     border: 1px dashed yellow;
-    height: fit-content;
     color: #fff;
   }
 
@@ -67,14 +64,14 @@ let style = `
     display: none;
     width: fit-content;
     overflow: hidden;
-    padding: 0;
-    margin: 0;
+    padding: 0.2em 0;
   }
   
   .volume-setting:hover  .volumebar {
-    display:inline-block;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
+    display:inline-flex;
+    margin-right: 1rem;
+    -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s;
   }
 
   #play, #pause{
@@ -94,36 +91,33 @@ let style = `
   /* input range */
 
 .custom-slider {
-    -webkit-appearance: none;
-    opacity: 1;
-    transition: opacity .2s;
-    height: 0.7em;
-    width: 70px;
-    background-image: linear-gradient(#fff, #fff);
-    background-position: center;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-size: 100% 25%;
-    cursor: pointer;
-  }
+  -webkit-appearance: none;
+  margin-right: 15px;
+  width: 70px;
+  height: 0.3em;
+  background: rgba(000, 000, 000, 0.6);
+  border-radius: 5px;
+  background-image: linear-gradient(#fff, #fff);
+  background-size: 0% 25%;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
   
 .custom-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 0.7em;
-    height: inherit;
-    border: none;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 2px 0 #555;
-  }
+  -webkit-appearance: none;
+  height: 0.8em;
+  width: 0.8em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 2px 0.5px #000;
+}
   
-  .custom-slider::-webkit-slider-runnable-track  {
-    -webkit-appearance: none;
-    box-shadow: none;
-    border: none;
-    background: transparent;
-    height: 100%;
-  }
+.custom-slider::-webkit-slider-runnable-track  {
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
 
   /* animation */
 
@@ -163,8 +157,15 @@ let template = /*html*/`
               <button id="v-on"><i class="fa fa-volume-up"></i></button>
               <button id="v-off" hidden ><i class="fa fa-volume-off"></i></button>
               <div class="volumebar child1">
-                <input type="range" class="custom-slider" title="volume" min="0" max="100" step="1" value="1">
-              </div>
+                <input type="range" 
+                  class="custom-slider" 
+                  title="volume"
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value="0.5"
+                >
+                </div>
             </div>
 
             <div class="time child1">
@@ -184,9 +185,11 @@ let template = /*html*/`
       <div>
         <button id="info">GET INFO</button>
         <button id="speed" >SPEED</button>
+        
       </div>
     </div>
    `;
+
 export default class MyVideoPlayer extends HTMLElement {
   constructor() {
     super();
@@ -201,6 +204,7 @@ export default class MyVideoPlayer extends HTMLElement {
     this.player = this.getSDom('#video');
     this.timeElapsed = this.getSDom('#time-elapsed');
     this.duration = this.getSDom('#duration');
+    this.rangeInput = this.getSDom('.custom-slider');
 
     this.playButton = this.getSDom('#play');
     this.pauseButton = this.getSDom('#pause');
@@ -251,6 +255,11 @@ export default class MyVideoPlayer extends HTMLElement {
     this.player.ontimeupdate = () => {
       this.updateTimeElapsed();
     }
+
+    this.rangeInput.oninput = (e) => {
+      this.handleInputChange(e); 
+    }
+
   }
 
   play() {
@@ -295,6 +304,18 @@ export default class MyVideoPlayer extends HTMLElement {
     this.timeElapsed.innerText = `${time.minutes}:${time.seconds}`;
     this.timeElapsed.setAttribute('datetime', `${time.minutes}m ${time.seconds}s`)
   }
+
+  handleInputChange(e) {
+      let target = e.target;
+      const min = target.min
+      const max = target.max
+      const val = target.value
+      this.player.volume = val;
+      target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
+      console.log(val);
+  }
+
 }
 
 customElements.define('my-component', MyVideoPlayer);
+
