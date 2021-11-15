@@ -5,32 +5,57 @@ const getBaseURL = () => {
 let style = `
   @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
   button {
-    border-radius: 10px;
-    background-color: seagreen;
+    //border-radius: 10px;
+    background-color: transparent;
     color: white;
     border: none;
-  }
-
-  button i{
+    padding: 0;
+    margin-right: 0.8em;
     cursor: pointer;
-    color: #fff;
-    border: 1px solid purple;
   }
 
   .video-controls {
     background: rgba(14, 32, 82, 0.8);
     padding: 0 1.5rem;
-    border: 2px dashed red;
+    display; flex;
+    flex-direction: column;
+    //border: 1px dashed red;
   }
 
+  .control-items {
+    border: 2px dashed black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .control-items div {
+    //margin: 0 1em 0 0;
+  }
+
+  .control-bar-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .control-bar-right {
+    display: inline-flex;
+  }
+  
   .video-controls div {
     vertical-align: middle;
   }
 
   .child1 {
-    display: inline-block;
-    border: 2px dashed yellow;
+    display: flex;
+    align-items: center;
+    border: 1px dashed yellow;
     height: fit-content;
+    color: #fff;
+  }
+
+  .time {
+    font-size:0.8em;
   }
 
   #video-container {
@@ -38,35 +63,25 @@ let style = `
     width: fit-content;
   } 
   
-  
-  .volume-setting {
-    width: fit-content;
-    border: dashed 2px blue;
-    transition: display 2s;
-  }
-  
-  .volume-bar {
-    display: none;
-  }
-
-  #voB {
-    width: 100%;
-  }
-
   .volumebar {
     display: none;
-    width: 20%;
+    width: fit-content;
     overflow: hidden;
+    padding: 0;
+    margin: 0;
   }
   
-  .volume-setting:hover + .volumebar {
-    background-color: seagreen;
+  .volume-setting:hover  .volumebar {
     display:inline-block;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s;
   }
 
- #play, #pause, #v-on, #v-off, #fullscreen{
+  #play, #pause{
+    font-size:0.9em;
+  }
+
+  #v-on, #v-off, #fullscreen{
     font-size:1.1em;
   }
 
@@ -76,14 +91,50 @@ let style = `
     margin-bottom: 0.3em;
   }
 
+  /* input range */
+
+.custom-slider {
+    -webkit-appearance: none;
+    opacity: 1;
+    transition: opacity .2s;
+    height: 0.7em;
+    width: 70px;
+    background-image: linear-gradient(#fff, #fff);
+    background-position: center;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: 100% 25%;
+    cursor: pointer;
+  }
+  
+.custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0.7em;
+    height: inherit;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 2px 0 #555;
+  }
+  
+  .custom-slider::-webkit-slider-runnable-track  {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    height: 100%;
+  }
+
+  /* animation */
+
   @-webkit-keyframes fadeIn {
     from { width: 0%; }
-      to { width: 20%; }
+      to { width: 70px; }
   }
 
   @keyframes fadeIn {
     from { width: 0%; }
-    to { width: 20%; }
+    to { width: 70px; }
   }
 `;
 
@@ -92,34 +143,47 @@ let template = /*html*/`
       <video id="video"></video>
       <!--<button id="restart"><i class="fa fa-undo"></i></button>-->
       <div class="video-controls">
+
         <div id="progress">
           <progress value="0" min="0">
             <i id="progress-bar"></i>
           </progress>
         </div>
-        <div class="child1">
-          <button id="play"><i class="fa fa-play"></i></button>
-          <button id="pause" hidden><i class="fa fa-pause"></i></button>
-        </div>
-        <div class="volume-setting child1">
-          <button id="v-on"><i class="fa fa-volume-up"></i></button>
-          <button id="v-off" hidden ><i class="fa fa-volume-off"></i></button>
-          <button id="fullscreen"><i class="fa fa-expand"></i></button>
-        </div>
-        <div class="volumebar child1">
-          <input type="range" id="voB" title="volume" min="0" max="1" step="0.1" value="1">
+
+        <div class="control-items">
+          <div class="control-bar-left">
+            <div class="child1">
+              <button id="play"><i class="fa fa-play"></i></button>
+              <button id="pause" hidden><i class="fa fa-pause"></i></button>
+              <button id="mb-5s">-5S</button>
+              <button id="fwd-5s">+5S</button>
+            </div>
+
+            <div class="volume-setting child1">
+              <button id="v-on"><i class="fa fa-volume-up"></i></button>
+              <button id="v-off" hidden ><i class="fa fa-volume-off"></i></button>
+              <div class="volumebar child1">
+                <input type="range" class="custom-slider" title="volume" min="0" max="100" step="1" value="1">
+              </div>
+            </div>
+
+            <div class="time child1">
+              <time id="time-elapsed">00:00</time>
+              <span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+              <time id="duration">00:00</time>
+            </div>
+          </div>
+
+          <div class="control-bar-right">
+            <div class="child1">
+              <button id="fullscreen"><i class="fa fa-expand"></i></button>
+            </div>
+          </div>
         </div>
       </div>
       <div>
         <button id="info">GET INFO</button>
-        <button id="mb-5s">-5S</button>
-        <button id="fwd-5s">+5S</button>
         <button id="speed" >SPEED</button>
-        <div class="time">
-          <time id="time-elapsed">00:00</time>
-          <span> / </span>
-          <time id="duration">00:00</time>
-        </div>
       </div>
     </div>
    `;
