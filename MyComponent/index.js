@@ -50,11 +50,10 @@ let style = `
 
   .video-container {
     position: relative;
-    //overflow: hidden;
-    margin: auto;
+    overflow: hidden;
     width: fit-content;
-    display: flex;
-    //border: 2px solid green;
+    margin: auto;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 255, 0.2);
   } 
 
   .video-container:hover .video-controls{
