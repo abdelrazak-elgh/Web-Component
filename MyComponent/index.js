@@ -12,8 +12,10 @@ let style = `
   font-weight: thin;
 }
 
+
 body {
   margin: 0;
+  padding: 1000px;
   width: 100vw;
   height: 100vh;
   background: linear-gradient(#ff9f4a, #ff3c83);
@@ -57,11 +59,11 @@ i {
 }
 
 .video-container {
-  display: flex;
   position: relative;
   overflow: hidden;
   border-radius: 5px;
   box-shadow: 0 0 20px 1px rgba(255, 255, 255, 1);
+  max-height: 70%;
 }
 
 .curVideo {
@@ -206,7 +208,7 @@ i {
 
 .container .video-list {
   overflow-y: scroll;
-  max-height: 100%;
+  max-height: 70%;
 }
 
 .video-list::-webkit-scrollbar {
@@ -592,28 +594,24 @@ export default class MyVideoPlayer extends HTMLElement {
     this.volumeOn.onclick = () => {
       this.mute();
       this.handleRangeUI(this.rangeInput, this.video.volume);
-      this.volumeOn.hidden = true;
-      this.volumeOff.hidden = false;
     }
 
     this.volumeOff.onclick = () => {
       this.unMute();
       this.handleRangeUI(this.rangeInput, this.video.volume);
-      this.volumeOn.hidden = false;
-      this.volumeOff.hidden = true;
     }
 
     this.fullScreenButton.onclick = () => {
       this.fullScreen();
     }
-    
+
     this.listVideo.forEach(video => {
       video.onclick = () => {
         this.listVideo.forEach(vid => vid.classList.remove('active'));
         video.classList.add('active');
-        if(video.classList.contains('active')){
+        if (video.classList.contains('active')) {
           let src = video.children[0].getAttribute('src');
-          this.video.src= src;
+          this.video.src = src;
         }
       }
     });
@@ -723,7 +721,7 @@ export default class MyVideoPlayer extends HTMLElement {
     const val = target.value
     this.video.volume = val;
     this.handleRangeUI(target, val);
-    // console.log(val);
+    console.log(val);
   }
 
   handleInputProgress(e) {
@@ -732,6 +730,13 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   handleRangeUI(element, value) {
+    if(value < 0.1) {
+      this.volumeOn.hidden = true;
+      this.volumeOff.hidden = false;
+    }else {
+      this.volumeOn.hidden = false;
+      this.volumeOff.hidden = true;
+    }
     element.style.backgroundSize = (value - element.min) * 100 / (element.max - element.min) + '% 100%';
   }
 }
