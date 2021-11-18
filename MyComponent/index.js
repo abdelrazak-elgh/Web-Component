@@ -5,266 +5,517 @@ const getBaseURL = () => {
 let style = `
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
-*{ box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  text-transform: capitalize;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: thin;
+}
 
-/* buttons */
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(#ff9f4a, #ff3c83);
+}
 
-  button {
-    background-color: transparent;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-  }
+button {
+  background-color: transparent;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+}
 
-  button:hover {
-    background: rgba(0, 0, 0, 0.6);
-  }
+button:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
 
-  i {
-    color: #fff;
-  }
+i {
+  color: #fff;
+}
 
-  #play, #pause{
-    font-size:0.9em;
-    margin-left: -0.5em;
-  }
+/* button */
+#play,
+#pause,
+#fullscreen,
+#mb-5s,
+#fwd-5s {
+  padding: 0.6vw;
+}
 
-  #v-on, #v-off, #fullscreen{
-    font-size:1.1em;
-  }
+#v-off {
+  padding-right: 1vw;
+}
 
-  #v-off {
-    padding-right: 0.5em;
-  }
+.container {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  grid-gap: 1vw;
+  align-items: flex-start;
+  padding: 2% 10%;
+  height: 100%;
+}
 
-  #fullscreen {
-    margin-right: -0.5em;
-  }
+.video-container {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 0 0 20px 1px rgba(255, 255, 255, 1);
+}
 
-  /* video container */
-
-  .video {
-    width: 100%;
+.curVideo {
+  width: 100%;
   height: auto;
+  border-radius: 5px;
+}
+
+.video-container:hover .video-controls {
+  transform: translateY(0);
+}
+
+.video-controls {
+  background: linear-gradient(#242b2e00, #242b2e);
+  padding: 0.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 0;
+  border-radius: 0 0 5px 5px;
+  width: 100%;
+  height: 15%;
+  transform: translateY(100%);
+  transition: 0.3s;
+}
+
+/* Video Progress Bar */
+.video-progress {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 5%;
+  transition: 0.3s;
+  background: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1%;
+  cursor: pointer;
+}
+
+.video-progress-filled {
+  width: 0;
+  background: white;
+}
+
+/* controls container */
+.control-items {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-bar-left {
+  display: flex;
+  flex-grow: 1;
+  height: 50%;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.control-bar-right {
+  display: flex;
+  flex-grow: 1;
+  height: 50%;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.elements {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  height: 100%;
+}
+
+.elements * {
+  margin: 0 0.5em;
+  font-size: 1vw;
+}
+
+.time {
+  font-size: 0.8em;
+  color: #fff;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  display: felx;
+  align-items: center;
+  justify-content: center;
+}
+
+/* volume input range */
+
+.volumebar {
+  display: none;
+  width: fit-content;
+  overflow: hidden;
+  padding: 0.4em 0;
+}
+
+.volume-setting:hover .volumebar {
+  display: flex;
+  margin-left: -1em;
+  animation-direction: reverse;
+  -webkit-animation: fadeIn 0.1s linear;
+  animation: fadeIn 0.5s linear;
+}
+
+.volume-setting:hover {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+}
+
+.custom-slider {
+  -webkit-appearance: none;
+  width: 70px;
+  height: 0.3em;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  background-image: linear-gradient(#fff, #fff);
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 0.8em;
+  width: 0.8em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 2px 0.5px #000;
+}
+
+.custom-slider::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+/* Video list */
+
+.container .video-list {
+  overflow-y: scroll;
+  max-height: 100%;
+}
+
+.video-list::-webkit-scrollbar {
+  width: 0.5vw;
+}
+
+.video-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+}
+
+.video-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+}
+
+.vid video {
+  width: 40%;
+  max-width: 40%;
+}
+
+.vid {
+  display: flex;
+  grid-gap: 0.5vw;
+  background: rgba(255,255,255,.5);
+  border-radius: 5px;
+  margin: 2%;
+  padding: 1%;
+  cursor: pointer;
+  max-height: 20vh;
+}
+
+.vid .h3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 60%;
+  color: #333;
+  margin-right: 0.5vw;
+}
+
+.vid:hover {
+  background: rgba(0,0,0,.3);
+  color: white;
+}
+
+.vid.active {
+  background: rgba(0,0,0,.8);
+}
+
+.vid.active * {
+  color: white;
+}
+
+.video-data {
+  margin: 0;
+}
+
+.title {
+  font-size: 1vw;
+}
+
+.duree {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.8vw;
+  font-weight: bold;
+}
+
+.author {
+  font-style: italic;
+  font-size: 0.8vw;
+}
+
+/* Animations */
+
+@-webkit-keyframes fadeIn {
+  from {
+    width: 0%;
   }
-
-  .video-container {
-    position: relative;
-    overflow: hidden;
-    width: fit-content;
-    margin: auto;
-    box-shadow: 0 0 20px 1px rgba(0, 0, 255, 0.2);
-  } 
-
-  .video-container:hover .video-controls{
-    transform: translateY(0);
-  }
-
-  .video-controls {
-    //background: rgba(0, 0, 0, 0.1);
-    //background: linear-gradient(#538FFB00, #5B54FA50);
-    background: linear-gradient(#242b2e00, #242b2e);
-    padding: 0.2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    transform: translateY(100%);
-    transition: .3s;
-    //border: 1px dashed red;
-  }
-
-  .video-progress {
-    position: relative;
-    display:flex;
-    width: 100%;
-    height: 5px;
-    transition: .3s;
-    background: rgba(255, 255, 255, 0.6);
-    margin-bottom: 0.5em;
-    cursor: pointer;
-  }
-
-  .video-progress-filled {
-    width: 0;
-    background: white;
-  }
-
-  .control-items {
-    //border: 2px dashed black;
-    display: flex;
-    flex-direction: row;
-    margin: 1rem 1rem;
-  }
-
-  .control-bar-left {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: flex-start;
-    //border: 2px solid blue;
-  }
-
-  .control-bar-right {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: flex-end;
-    //border: 2px solid blue;
-  }
-
-  .child1 {
-    display: flex;
-    align-items: center;
-    //border: 1px dashed yellow;
-    color: #fff;
-  }
-
-  .child1 *{
-    margin: 0 0.5em;
-  }
-
-  .time {
-    font-size:0.8em;
-    color: #fff;
-    text-align : center;
-    font-family: Arial, Helvetica, sans-serif;
-    display: felx;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* input range */
-
-  .volumebar {
-    display: none;
-    width: fit-content;
-    overflow: hidden;
-    padding: 0.2em 0;
-  }
-  
-  .volume-setting:hover  .volumebar {
-    display:flex;
-    margin-left: -1em;
-    animation-direction: reverse;
-    -webkit-animation: fadeIn 0.1s linear;
-    animation: fadeIn 0.5s linear;
-  }
-
-  .volume-setting:hover{
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 10px;
-  }
-
-  .custom-slider {
-    -webkit-appearance: none;
+  to {
     width: 70px;
-    height: 0.3em;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 5px;
-    background-image: linear-gradient(#fff, #fff);
-    background-size: 50% 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
   }
-    
-  .custom-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 0.8em;
-    width: 0.8em;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 2px 0.5px #000;
-  }
-    
-  .custom-slider::-webkit-slider-runnable-track  {
-    -webkit-appearance: none;
-    box-shadow: none;
-    border: none;
-    background: transparent;
-  }
+}
 
-  /* animation */
-
-  @-webkit-keyframes fadeIn {
-    from { width: 0%; }
-      to { width: 70px; }
+@keyframes fadeIn {
+  from {
+    width: 0%;
   }
-
-  @keyframes fadeIn {
-    from { width: 0%; }
-    to { width: 70px; }
+  to {
+    width: 70px;
   }
+}
+
+@media (max-width:991px) {
+  .container {
+    grid-template-columns: 2fr 1fr;
+    padding: 10px;
+  }
+}
+
+@media (max-width:580px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
 `;
 
 let template = /*html*/`
-    <div class="video-container">
-      <video class="video"></video>
-      <!--<button id="restart"><i class="fa fa-undo"></i></button>-->
-    
-      <div class="video-controls">
-        <div class="control-items">
-          <div class="control-bar-left">
-            <div class="child1">
-              <button id="play"><i class="fa fa-play"></i></button>
-              <button id="pause" hidden><i class="fa fa-pause"></i></button>
-              <button id="mb-5s"><i class="fa fa-fast-backward"></i></button>
-              <button id="fwd-5s"><i class="fa fa-fast-forward"></i></button>
-            </div>
-
-            <!--<div class="volume-setting child1">
-              <button id="v-on"><i class="fa fa-volume-up"></i></button>
-              <button id="v-off" hidden ><i class="fa fa-volume-off"></i></button>
-              <div class="volumebar child1">
-                <input type="range" 
-                  class="custom-slider" 
-                  title="volume"
-                  min="0" 
-                  max="1" 
-                  step="0.01" 
-                  value="0.5"
-                >
-              </div>
-            </div>-->
-
-            <div class="time child1">
-              <time id="time-elapsed">00:00</time>
-              <span>/</span>
-              <time id="duration">00:00</time>
-            </div>
+<div class="container">
+  <div class="video-container">
+    <video
+      src="https://media.w3.org/2010/05/sintel/trailer.mp4"
+      class="curVideo"
+    ></video>
+    <div class="video-controls">
+      <div class="control-items">
+        <div class="control-bar-left">
+          <div class="elements">
+            <button id="play"><i class="fa fa-play"></i></button>
+            <button id="pause" hidden><i class="fa fa-pause"></i></button>
+            <button id="mb-5s"><i class="fa fa-fast-backward"></i></button>
+            <button id="fwd-5s"><i class="fa fa-fast-forward"></i></button>
           </div>
 
-          <div class="control-bar-right">
-            <div class="volume-setting child1">
-              <button id="v-on"><i class="fa fa-volume-up"></i></button>
-              <button id="v-off" hidden ><i class="fa fa-volume-off"></i></button>
-              <div class="volumebar child1">
-                <input type="range" 
-                  class="custom-slider" 
-                  title="volume"
-                  min="0" 
-                  max="1" 
-                  step="0.01" 
-                  value="0.5"
-                >
-              </div>
-            </div>
-            <div class="child1">
-              <button id="fullscreen" aria-label="fullscreen"><i class="fa fa-expand"></i></button>
-            </div>
+          <div class="time elements">
+            <time id="time-elapsed">00:00</time>
+            <span>/</span>
+            <time id="duration">00:00</time>
           </div>
         </div>
-        <div class="video-progress">
-          <div class="video-progress-filled"></div>
+
+        <div class="control-bar-right">
+          <div class="volume-setting elements">
+            <button id="v-on"><i class="fa fa-volume-up"></i></button>
+            <button id="v-off" hidden>
+              <i class="fa fa-volume-off"></i>
+            </button>
+            <div class="volumebar">
+              <input
+                type="range"
+                class="custom-slider"
+                title="volume"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.5"
+              />
+            </div>
+          </div>
+          <div class="elements">
+            <button id="fullscreen" aria-label="fullscreen">
+              <i class="fa fa-expand"></i>
+            </button>
+          </div>
         </div>
       </div>
-      <!--<div>
-        <button id="info">GET INFO</button>
-        <button id="speed" >SPEED</button>
-        
-      </div>-->
+      <div class="video-progress">
+        <div class="video-progress-filled"></div>
+      </div>
     </div>
+  </div>
+
+  <div class="video-list">
+    <div class="vid active">
+      <video
+        src="https://media.w3.org/2010/05/sintel/trailer.mp4"
+        preload
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Sintel</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://cdn.videvo.net/videvo_files/video/free/2014-12/large_watermarked/Raindrops_Videvo_preview.mp4"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Raindrops</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://cdn.videvo.net/videvo_files/video/free/2016-01/large_watermarked/1_fireworks_preview.mp4"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Fireworks</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_30mb.mp4"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Big buck bunny</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://cdn.videvo.net/videvo_files/video/free/2021-11/large_watermarked/211106_01_COP26%20Saturday_4k_009_preview.mp4"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Climate Change Protests</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://player.vimeo.com/external/586228759.sd.mp4?s=d35b9b32851db86dde64302bd696390232105dd2&profile_id=165"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Demon slayer</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://player.vimeo.com/external/135713851.mobile.mp4?s=32fd870d9904fa80d74b58aacb95ec545fb0e3f6&profile_id=116"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">cars sound</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid">
+      <video
+        src="https://player.vimeo.com/external/406256528.hd.mp4?s=450be55592accb19beb0f5b0da2ce97cc0e613d4&profile_id=174"
+        muted
+      ></video>
+      <div class="h3">
+        <div>
+          <h3 class="video-data title">Veritable grill</h3>
+        </div>
+        <div>
+          <p class="video-data author">By Abdelrazak</p>
+        </div>
+        <div class="duree">
+          <p class="video-data lv-duration">00:00</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
    `;
 
 export default class MyVideoPlayer extends HTMLElement {
@@ -279,8 +530,11 @@ export default class MyVideoPlayer extends HTMLElement {
     this.shadowRoot.innerHTML = `<style>${style}</style>${template}`;
 
     // recuperation des elements du shadow
+    this.listVideo = this.shadowRoot.querySelectorAll('.vid');
+    this.listVideoDuration = this.shadowRoot.querySelectorAll('.lv-duration');
+
     this.videoContainer = this.getSDom('.video-container');
-    this.video = this.getSDom('.video');
+    this.video = this.getSDom('.curVideo');
     this.timeElapsed = this.getSDom('#time-elapsed');
     this.duration = this.getSDom('#duration');
     this.rangeInput = this.getSDom('.custom-slider');
@@ -352,10 +606,31 @@ export default class MyVideoPlayer extends HTMLElement {
     this.fullScreenButton.onclick = () => {
       this.fullScreen();
     }
+    
+    this.listVideo.forEach(video => {
+      video.onclick = () => {
+        this.listVideo.forEach(vid => vid.classList.remove('active'));
+        video.classList.add('active');
+        if(video.classList.contains('active')){
+          let src = video.children[0].getAttribute('src');
+          this.video.src= src;
+        }
+      }
+    });
 
     this.video.onloadedmetadata = () => {
       this.initializeVideo();
     }
+
+    this.listVideo.forEach(video => {
+      const durationC = video.children[1].children[2];
+      video.children[0].onloadedmetadata = () => {
+        let videoDuration = Math.round(video.children[0].duration);
+        let time = this.formatTime(videoDuration);
+        let textnode = document.createTextNode(`${time.minutes}:${time.seconds}`);
+        durationC.replaceChild(textnode, durationC.children[0]);
+      }
+    });
 
     this.video.ontimeupdate = () => {
       this.updateTimeElapsed();
@@ -369,6 +644,7 @@ export default class MyVideoPlayer extends HTMLElement {
     this.progress.onclick = (e) => {
       this.handleInputProgress(e);
     }
+
   }
 
   play() {
