@@ -1,5 +1,6 @@
 import { style } from './cssTemplate.js';
 import { template } from './htmlTemplate.js'
+import './lib/webaudio-controls.js';
 
 const getBaseURL = () => {
   return new URL('.', import.meta.url);
@@ -10,7 +11,6 @@ export default class MyVideoPlayer extends HTMLElement {
     super();
     console.log("BaseURL = " + getBaseURL());
     const shadow = this.attachShadow({ mode: 'open' });
-    let isMute = false;
   }
 
   connectedCallback() {
@@ -22,7 +22,7 @@ export default class MyVideoPlayer extends HTMLElement {
 
     this.videoContainer = this.getSDom('.video-container');
     this.videoControls = this.getSDom('.video-controls');
-    this.video = this.getSDom('.curVideo');
+    this.video = this.getSDom('.currentVideo');
     this.timeElapsed = this.getSDom('#time-elapsed');
     this.duration = this.getSDom('#duration');
     this.rangeInput = this.getSDom('.custom-slider');
@@ -39,7 +39,7 @@ export default class MyVideoPlayer extends HTMLElement {
     this.fullScreenButton = this.getSDom('#fullscreen');
 
     // récupération de l'attribut HTML
-    this.video.src = this.getAttribute("src");
+    // this.video.src = this.getAttribute("src");
 
     // initialisation du volume de la video par default
     this.video.volume = this.rangeInput.value;
@@ -53,6 +53,10 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   listenerConfiguration() {
+    window.onkeydown = function(e) { 
+      return !(e.keyCode == 32 && e.target == document.body);
+    }; 
+    
     this.playButton.onclick = () => {
       this.handlePlayButtonChange();
     }
@@ -273,6 +277,9 @@ export default class MyVideoPlayer extends HTMLElement {
       case 'ArrowDown':
         //this.forward5s();
         break;
+      case 'f':
+        this.fullScreen();
+        break;
       case 'm':
         if (this.video.volume > 0) {
           this.mute();
@@ -283,8 +290,11 @@ export default class MyVideoPlayer extends HTMLElement {
         }
         this.mute();
         break;
-      case 'f':
-        this.fullScreen();
+      case 'w':
+        //this.slowDown();
+        break;
+      case 'x':
+        //this.speedUp();
         break;
     }
   }
