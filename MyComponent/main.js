@@ -1,5 +1,6 @@
 import { style } from './js/cssTemplate.js';
-import { template } from './js/htmlTemplate.js'
+import { template } from './js/htmlTemplate.js';
+import { videoList, initPlayList ,addVideo } from './js/movieList.js';
 import { visualize2d } from './js/webAudioVisualiseur.js'
 import './js/lib/webaudio-controls.js';
 
@@ -16,6 +17,7 @@ export default class MyVideoPlayer extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.innerHTML = `<style>${style}</style>${template}`;
+    initPlayList(this.shadowRoot);
 
     // recuperation des elements du shadow
     this.listVideo = this.shadowRoot.querySelectorAll('.vid');
@@ -33,6 +35,8 @@ export default class MyVideoPlayer extends HTMLElement {
 
     this.playButton = this.getSDom('#play');
     this.pauseButton = this.getSDom('#pause');
+    this.replayButton = this.getSDom('#replay');
+    this.nextButton = this.getSDom('#next');
     this.fwd5sButton = this.getSDom('#fwd-5s');
     this.mb5sButton = this.getSDom('#mb-5s');
     //this.spdButton = this.getSDom('#speed');
@@ -179,6 +183,15 @@ export default class MyVideoPlayer extends HTMLElement {
       this.handlePlayButtonChange();
     }
 
+    this.replayButton.onclick = () => {
+      this.resetVideo();
+      this.handlePlayButtonChange();
+    }
+
+    this.nextButton.onclick = () => {
+      console.log('next');
+    }
+
     this.mb5sButton.onclick = () => {
       this.moveBack5s();
     }
@@ -259,6 +272,10 @@ export default class MyVideoPlayer extends HTMLElement {
     this.video.onloadedmetadata = () => {
       this.initializeVideo();
       this.resetKnobs();
+    }
+
+    this.video.onended = () => {
+      this.handlePlayButtonChange();
     }
 
     /* Event to manage the display of the video duration in the video list */
@@ -392,15 +409,26 @@ export default class MyVideoPlayer extends HTMLElement {
 
   handlePlayButtonChange() {
     if (this.video.paused || this.video.ended) {
-      this.video.play();
-      setTimeout(() => {
-        this.hideControls();
-      }, 3000);
-      this.pauseButton.hidden = false;
-      this.playButton.hidden = true;
+      console.log('pause ou end');
+      if (this.video.currentTime == this.video.duration) {
+        console.log('end')
+        this.pauseButton.hidden = true;
+        this.playButton.hidden = true;
+        this.replayButton.hidden = false;
+      } else {
+        console.log('pause');
+        this.video.play();
+        setTimeout(() => {
+          this.hideControls();
+        }, 3000);
+        this.replayButton.hidden = true;
+        this.playButton.hidden = true;
+        this.pauseButton.hidden = false;
+      }
     } else {
       this.video.pause();
       this.showControls();
+      this.pauseButton.hidden = true;
       this.pauseButton.hidden = true;
       this.playButton.hidden = false;
     }

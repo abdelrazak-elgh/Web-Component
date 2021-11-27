@@ -18,6 +18,14 @@ const template = /*html*/`
                     <span class="tooltiptext">pause</span
                     ><i class="fa fa-pause"></i>
                   </button>
+                  <button class="btooltip" id="replay" hidden>
+                    <span class="tooltiptext">replay</span
+                    ><i class="fa fa-undo"></i>
+                  </button>
+                  <button class="btooltip" id="next">
+                    <span class="tooltiptext">next</span
+                    ><i class="fa fa-step-forward"></i>
+                  </button>
                   <button class="btooltip" id="mb-5s">
                     <span class="tooltiptext">move back 5s</span
                     ><i class="fa fa-fast-backward"></i>
@@ -151,194 +159,6 @@ const template = /*html*/`
           Playlist
         </div>
         <div class="video-list">
-          <div class="vid active">
-            <video 
-              src="MyComponent/assets/video/FREE_Guitar_Beat.mp4">
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">sintel</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-          <div class="vid">
-            <video 
-                src="MyComponent/assets/video/Overtaken.mp4" type="video/mp4">
-            </video>
-            <div class="video-info-div">
-               <div>
-                <h3 class="video-data title">Demon slayer</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-          <div class="vid">
-            <video 
-                src="MyComponent/assets/video/Demon_slayer.mp4" type="video/mp4">
-            </video>
-            <div class="video-info-div">
-               <div>
-                <h3 class="video-data title">Demon slayer</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-          <div class="vid">
-            <video 
-                src="MyComponent/assets/video/FREE_Guitar_Beat_2.mp4" type="video/mp4">
-            </video>
-            <div class="video-info-div">
-               <div>
-                <h3 class="video-data title">Demon slayer</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/Sintel_trailer.mp4" type="video/mp4"
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">sintel</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/Raindrops.mp4" type="video/mp4"
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">Raindrops</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/fireworks.mp4" type="video/mp4"
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">Fireworks</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/big_buck_bunny.mp4" type="video/mp4"
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">Big buck bunny</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/Climate_Change_Protests.mp4" type="video/mp4" 
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">Climate Change Protests</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-        
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/trafficjam_sounds.mp4" type="video/mp4"
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">cars sound</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
-        
-          <div class="vid">
-            <video 
-              src="MyComponent/assets/video/Grills.mp4" type="video/mp4"
-              muted>
-            </video>
-            <div class="video-info-div">
-              <div>
-                <h3 class="video-data title">Veritable grill</h3>
-              </div>
-              <div>
-                <p class="video-data author">By Author</p>
-              </div>
-              <div class="duree">
-                <p class="video-data">00:00</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="sub-vlc-2">
