@@ -4,9 +4,7 @@ const template = /*html*/`
     <div class="main-video-container">
       <div class="sub-mvc-1">
         <div class="video-container">
-          <video class="currentVideo"
-                src="MyComponent/assets/video/FREE_Guitar_Beat.mp4" type="video/mp4"
-          ></video>
+          <video class="currentVideo"></video>
           <div class="video-controls">
             <div class="control-items">
               <div class="control-bar-left elements">

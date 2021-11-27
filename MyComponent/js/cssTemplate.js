@@ -412,7 +412,7 @@ i {
 }
 
 .container .video-list-container .video-list .vid video{
-  background: #000;
+  //background: #000;
   width: 40%;
   height: 100%;
 }

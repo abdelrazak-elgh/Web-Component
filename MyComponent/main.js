@@ -80,6 +80,8 @@ export default class MyVideoPlayer extends HTMLElement {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
+    this.addFirstVideoToPlayer();
+
     // configuration des ecouteurs sur les boutons
     this.listenerConfiguration();
 
@@ -255,6 +257,7 @@ export default class MyVideoPlayer extends HTMLElement {
     }
 
     this.listVideo.forEach(video => {
+      console.log(video)
       video.onclick = () => {
         this.listVideo.forEach(vid => vid.classList.remove('active'));
         video.classList.add('active');
@@ -385,6 +388,17 @@ export default class MyVideoPlayer extends HTMLElement {
     };
   }
 
+  addFirstVideoToPlayer() {
+    console.log(this.listVideo[0].childNodes);
+    this.listVideo[0].classList.add('active');
+    let firstChild = this.listVideo[0].childNodes;
+    firstChild.forEach(node => {
+        if (node.nodeName.toLowerCase() == 'video') {
+          this.video.src = node.src;
+        }
+    });
+  }
+
   initializeVideo() {
     console.log(this.video.duration);
     this.pauseButton.hidden = true;
@@ -394,7 +408,7 @@ export default class MyVideoPlayer extends HTMLElement {
     let videoDuration = Math.round(this.video.duration);
     let time = this.formatTime(videoDuration);
     this.duration.innerText = `${time.minutes}:${time.seconds}`;
-    //this.handlePlayButtonChange();
+    this.handlePlayButtonChange();
   }
 
   updateTimeElapsed() {
