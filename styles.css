@@ -1,6 +1,10 @@
+html {
+  background: linear-gradient(#FF9F4A, #FF3C83);
+  background-repeat: no-repeat;
+}
+
 body {
-  margin: 0;
+  margin:0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(#ff9f4a, #ff3c83);
 }
