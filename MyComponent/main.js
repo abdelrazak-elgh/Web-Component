@@ -11,7 +11,7 @@ const getBaseURL = () => {
 export default class MyVideoPlayer extends HTMLElement {
   constructor() {
     super();
-    console.log("BaseURL = " + getBaseURL());
+    console.log('BaseURL = ' + getBaseURL());
     const shadow = this.attachShadow({ mode: 'open' });
   }
 
@@ -33,17 +33,20 @@ export default class MyVideoPlayer extends HTMLElement {
     this.progress = this.getSDom('.video-progress');
     this.progressBar = this.getSDom('.video-progress-filled');
 
+    // Buttons
     this.playButton = this.getSDom('#play');
     this.pauseButton = this.getSDom('#pause');
     this.replayButton = this.getSDom('#replay');
+    this.previousButton = this.getSDom('#previous');
     this.nextButton = this.getSDom('#next');
     this.fwd5sButton = this.getSDom('#fwd-5s');
     this.mb5sButton = this.getSDom('#mb-5s');
     //this.spdButton = this.getSDom('#speed');
     this.volumeOn = this.getSDom('#v-on');
-    this.volumeOff = this.getSDom("#v-off");
+    this.volumeOff = this.getSDom('#v-off');
     this.fullScreenButton = this.getSDom('#fullscreen');
 
+    // Knobs
     this.displayKnobsButton = this.getSDom('#display-knobs');
     this.hideKnobsButton = this.getSDom('#hide-knobs');
     this.subMVC1 = this.getSDom('.sub-mvc-1');
@@ -54,8 +57,14 @@ export default class MyVideoPlayer extends HTMLElement {
     this.subVLC1 = this.getSDom('.sub-vlc-1');
     this.subVLC2 = this.getSDom('.sub-vlc-2');
 
-    // récupération de l'attribut HTML
-    // this.video.src = this.getAttribute("src");
+    this.knobsDiv = this.getSDom('.knobs-div');
+    this.knob1 = this.getSDom('#knb1');
+    this.knob2 = this.getSDom('#knb2');
+    this.knob3 = this.getSDom('#knb3');
+    this.knob4 = this.getSDom('#knb4');
+    this.knob5 = this.getSDom('#knb5');
+    this.knob6 = this.getSDom('#knb6');
+
 
     // initialisation du volume de la video par default
     this.video.volume = this.rangeInput.value;
@@ -64,14 +73,6 @@ export default class MyVideoPlayer extends HTMLElement {
 
     this.audioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
     this.audioContext = new this.audioCtx();
-
-    this.knobsDiv = this.getSDom('.knobs-div');;
-    this.knob1 = this.getSDom('#knb1');
-    this.knob2 = this.getSDom('#knb2');
-    this.knob3 = this.getSDom('#knb3');
-    this.knob4 = this.getSDom('#knb4');
-    this.knob5 = this.getSDom('#knb5');
-    this.knob6 = this.getSDom('#knb6');
 
     this.canvasDiv = this.getSDom('.canvas-div');
     this.canvas = this.getSDom('#myCanvas');
@@ -82,7 +83,6 @@ export default class MyVideoPlayer extends HTMLElement {
 
     this.addFirstVideoToPlayer();
 
-    // configuration des ecouteurs sur les boutons
     this.listenerConfiguration();
 
     this.buildAudioGraph();
@@ -142,7 +142,7 @@ export default class MyVideoPlayer extends HTMLElement {
     [60, 170, 350, 1000, 3500, 10000].forEach((freq, i) => {
       let eq = this.audioContext.createBiquadFilter();
       eq.frequency.value = freq;
-      eq.type = "peaking";
+      eq.type = 'peaking';
       eq.gain.value = 0;
       this.filters.push(eq);
     });
@@ -164,8 +164,8 @@ export default class MyVideoPlayer extends HTMLElement {
     this.filters[nbFilter].gain.value = value;
 
     // update output labels
-    let output = this.getSDom("#gain" + nbFilter);
-    output.value = value + " dB";
+    let output = this.getSDom('#gain' + nbFilter);
+    output.value = value + ' dB';
   }
 
   getSDom(selector) {
@@ -191,8 +191,7 @@ export default class MyVideoPlayer extends HTMLElement {
     }
 
     this.nextButton.onclick = () => {
-      console.log('next');
-      this.handleNextVideo();
+      this.handleVideoChange();
     }
 
     this.mb5sButton.onclick = () => {
@@ -224,28 +223,28 @@ export default class MyVideoPlayer extends HTMLElement {
     this.displayKnobsButton.onclick = () => {
       this.displayKnobsButton.hidden = true;
       this.hideKnobsButton.hidden = false;
-      this.hideKnobsButton.style.height = "auto";
-      this.hideKnobsButton.style.borderRadius = "initial";
-      this.subMVC1.style.height = "80%";
-      this.subMVC2.style.height = "19%";
-      this.knobsDiv.style.visibility = "visible";
+      this.hideKnobsButton.style.height = 'auto';
+      this.hideKnobsButton.style.borderRadius = 'initial';
+      this.subMVC1.style.height = '80%';
+      this.subMVC2.style.height = '19%';
+      this.knobsDiv.style.visibility = 'visible';
     }
 
     this.hideKnobsButton.onclick = () => {
       this.displayKnobsButton.hidden = false;
       this.hideKnobsButton.hidden = true;
-      this.subMVC1.style.height = "96%";
-      this.subMVC2.style.height = "3%";
-      this.knobsDiv.style.visibility = "hidden"
+      this.subMVC1.style.height = '96%';
+      this.subMVC2.style.height = '3%';
+      this.knobsDiv.style.visibility = 'hidden'
     }
 
     this.displaySoundGraph.onclick = () => {
       this.displaySoundGraph.hidden = true;
       this.hideSoundGraph.hidden = false;
-      this.hideSoundGraph.style.height = "auto";
-      this.hideSoundGraph.style.borderRadius = "initial";
-      this.subVLC1.style.height = "80%";
-      this.subVLC2.style.height = "19%";
+      this.hideSoundGraph.style.height = 'auto';
+      this.hideSoundGraph.style.borderRadius = 'initial';
+      this.subVLC1.style.height = '80%';
+      this.subVLC2.style.height = '19%';
       this.canvasDiv.hidden = false;
     }
 
@@ -253,23 +252,15 @@ export default class MyVideoPlayer extends HTMLElement {
       this.displaySoundGraph.hidden = false;
       this.hideSoundGraph.hidden = true;
       this.canvasDiv.hidden = true;
-      this.subVLC1.style.height = "96%";
-      this.subVLC2.style.height = "3%";
+      this.subVLC1.style.height = '96%';
+      this.subVLC2.style.height = '3%';
     }
 
     this.listVideo.forEach(video => {
-      //console.log(video);
       video.onclick = () => {
-        //console.log(video)
         this.listVideo.forEach(vid => vid.classList.remove('active'));
         video.classList.add('active');
-        this.handleMainVideoChange(video.childNodes);
-        let x = video.childNodes;
-        if (video.classList.contains('active')) {
-          //this.handleMainVideoInfo(video.children)
-          //let src = video.children[0].getAttribute('src'); 
-          //this.video.src = src;
-        }
+        this.handleMainVideoData(video.childNodes);
       }
     });
 
@@ -355,9 +346,7 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   unMute() {
-    console.log(this.currentVolume);
     this.video.volume = this.currentVolume;
-    console.log(this.video.volume);
     this.rangeInput.value = this.currentVolume;
   }
 
@@ -378,7 +367,7 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   showControls() {
-    this.videoControls.style.transform = "translateY(0)";
+    this.videoControls.style.transform = 'translateY(0)';
   }
 
   hideControls() {
@@ -394,21 +383,16 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   addFirstVideoToPlayer() {
-    //console.log(this.listVideo[0].childNodes);
     this.listVideo[0].classList.add('active');
     let firstChild = this.listVideo[0].childNodes;
     firstChild.forEach(node => {
-      //console.log(node.nodeName);
       if (node.nodeName.toLowerCase() == 'video') {
         this.video.src = node.src;
       }
       if (node.nodeName.toLowerCase() == 'div') {
-        //console.log(node.childNodes);
         node.childNodes.forEach(nodeElement => {
-          //console.log(nodeElement.childNodes);
           nodeElement.childNodes.forEach(node => {
             if (node.nodeName.toLowerCase() == 'h3') {
-              console.log(node.innerText);
               this.videoTitle.innerText = node.innerText;
             }
           });
@@ -418,10 +402,9 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   initializeVideo() {
-    console.log(this.video.duration);
     this.pauseButton.hidden = true;
     this.playButton.hidden = false;
-    this.progressBar.style.width = "0";
+    this.progressBar.style.width = '0';
     this.showControls();
     let videoDuration = Math.round(this.video.duration);
     let time = this.formatTime(videoDuration);
@@ -429,19 +412,15 @@ export default class MyVideoPlayer extends HTMLElement {
     this.handlePlayButtonChange();
   }
 
-  handleMainVideoChange(element) {
+  handleMainVideoData(element) {
     element.forEach(node => {
-      //console.log(node.nodeName);
       if (node.nodeName.toLowerCase() == 'video') {
         this.video.src = node.src;
       }
       if (node.nodeName.toLowerCase() == 'div') {
-        //console.log(node.childNodes);
         node.childNodes.forEach(nodeElement => {
-          //console.log(nodeElement.childNodes);
           nodeElement.childNodes.forEach(node => {
             if (node.nodeName.toLowerCase() == 'h3') {
-              console.log(node.innerText);
               this.videoTitle.innerText = node.innerText;
             }
           });
@@ -450,25 +429,24 @@ export default class MyVideoPlayer extends HTMLElement {
     });
   }
 
-  handleNextVideo() {
+  handleVideoChange() {
     this.currentIndexActive = 0;
     let i = 0;
 
     this.listVideo.forEach(vid => {
-      if(vid.classList.contains('active')){
+      if (vid.classList.contains('active')) {
         this.currentIndexActive = i;
-        console.log(this.currentIndexActive);
       }
       i++;
     });
     this.listVideo.forEach(vid => vid.classList.remove('active'));
 
-    if(this.currentIndexActive < this.listVideo.length-1) {
-      this.listVideo[this.currentIndexActive+1].classList.add('active');
-      this.handleMainVideoChange(this.listVideo[this.currentIndexActive+1].childNodes);
-    }else if(this.currentIndexActive == this.listVideo.length-1){
+    if (this.currentIndexActive < this.listVideo.length - 1) {
+      this.listVideo[this.currentIndexActive + 1].classList.add('active');
+      this.handleMainVideoData(this.listVideo[this.currentIndexActive + 1].childNodes);
+    } else {
       this.listVideo[0].classList.add('active');
-      this.handleMainVideoChange(this.listVideo[0].childNodes);
+      this.handleMainVideoData(this.listVideo[0].childNodes);
     }
   }
 
@@ -484,14 +462,11 @@ export default class MyVideoPlayer extends HTMLElement {
 
   handlePlayButtonChange() {
     if (this.video.paused || this.video.ended) {
-      //console.log('pause ou end');
       if (this.video.currentTime == this.video.duration) {
-        console.log('end')
         this.pauseButton.hidden = true;
         this.playButton.hidden = true;
         this.replayButton.hidden = false;
       } else {
-        //console.log('pause');
         this.video.play();
         setTimeout(() => {
           this.hideControls();
@@ -527,7 +502,6 @@ export default class MyVideoPlayer extends HTMLElement {
     const val = target.value
     this.video.volume = val;
     this.handleRangeUI(target, val);
-    console.log(val);
   }
 
   handleInputProgress(e) {

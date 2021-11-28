@@ -20,6 +20,10 @@ const template = /*html*/`
                     <span class="tooltiptext">replay</span
                     ><i class="fa fa-undo"></i>
                   </button>
+                  <button class="btooltip" id="previous" hidden>
+                    <span class="tooltiptext">previous</span
+                    ><i class="fa fa-step-backward"></i>
+                  </button>
                   <button class="btooltip" id="next">
                     <span class="tooltiptext">next</span
                     ><i class="fa fa-step-forward"></i>
