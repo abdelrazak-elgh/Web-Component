@@ -1,6 +1,6 @@
 import { style } from './js/cssTemplate.js';
 import { template } from './js/htmlTemplate.js';
-import { videoList, initPlayList ,addVideo } from './js/movieList.js';
+import { videoList, initPlayList, addVideo } from './js/movieList.js';
 import { visualize2d } from './js/webAudioVisualiseur.js'
 import './js/lib/webaudio-controls.js';
 
@@ -26,7 +26,7 @@ export default class MyVideoPlayer extends HTMLElement {
     this.videoContainer = this.getSDom('.video-container');
     this.videoControls = this.getSDom('.video-controls');
     this.video = this.getSDom('.currentVideo');
-    //this.video = this.shadowRoot.getElementById('currentVideo');
+    this.videoTitle = this.getSDom('#main-video-title');
     this.timeElapsed = this.getSDom('#time-elapsed');
     this.duration = this.getSDom('#duration');
     this.rangeInput = this.getSDom('.custom-slider');
@@ -192,6 +192,7 @@ export default class MyVideoPlayer extends HTMLElement {
 
     this.nextButton.onclick = () => {
       console.log('next');
+      this.handleNextVideo();
     }
 
     this.mb5sButton.onclick = () => {
@@ -257,13 +258,17 @@ export default class MyVideoPlayer extends HTMLElement {
     }
 
     this.listVideo.forEach(video => {
-      console.log(video)
+      //console.log(video);
       video.onclick = () => {
+        //console.log(video)
         this.listVideo.forEach(vid => vid.classList.remove('active'));
         video.classList.add('active');
+        this.handleMainVideoChange(video.childNodes);
+        let x = video.childNodes;
         if (video.classList.contains('active')) {
-          let src = video.children[0].getAttribute('src');
-          this.video.src = src;
+          //this.handleMainVideoInfo(video.children)
+          //let src = video.children[0].getAttribute('src'); 
+          //this.video.src = src;
         }
       }
     });
@@ -389,13 +394,26 @@ export default class MyVideoPlayer extends HTMLElement {
   }
 
   addFirstVideoToPlayer() {
-    console.log(this.listVideo[0].childNodes);
+    //console.log(this.listVideo[0].childNodes);
     this.listVideo[0].classList.add('active');
     let firstChild = this.listVideo[0].childNodes;
     firstChild.forEach(node => {
-        if (node.nodeName.toLowerCase() == 'video') {
-          this.video.src = node.src;
-        }
+      //console.log(node.nodeName);
+      if (node.nodeName.toLowerCase() == 'video') {
+        this.video.src = node.src;
+      }
+      if (node.nodeName.toLowerCase() == 'div') {
+        //console.log(node.childNodes);
+        node.childNodes.forEach(nodeElement => {
+          //console.log(nodeElement.childNodes);
+          nodeElement.childNodes.forEach(node => {
+            if (node.nodeName.toLowerCase() == 'h3') {
+              console.log(node.innerText);
+              this.videoTitle.innerText = node.innerText;
+            }
+          });
+        });
+      }
     });
   }
 
@@ -411,6 +429,49 @@ export default class MyVideoPlayer extends HTMLElement {
     this.handlePlayButtonChange();
   }
 
+  handleMainVideoChange(element) {
+    element.forEach(node => {
+      //console.log(node.nodeName);
+      if (node.nodeName.toLowerCase() == 'video') {
+        this.video.src = node.src;
+      }
+      if (node.nodeName.toLowerCase() == 'div') {
+        //console.log(node.childNodes);
+        node.childNodes.forEach(nodeElement => {
+          //console.log(nodeElement.childNodes);
+          nodeElement.childNodes.forEach(node => {
+            if (node.nodeName.toLowerCase() == 'h3') {
+              console.log(node.innerText);
+              this.videoTitle.innerText = node.innerText;
+            }
+          });
+        });
+      }
+    });
+  }
+
+  handleNextVideo() {
+    this.currentIndexActive = 0;
+    let i = 0;
+
+    this.listVideo.forEach(vid => {
+      if(vid.classList.contains('active')){
+        this.currentIndexActive = i;
+        console.log(this.currentIndexActive);
+      }
+      i++;
+    });
+    this.listVideo.forEach(vid => vid.classList.remove('active'));
+
+    if(this.currentIndexActive < this.listVideo.length-1) {
+      this.listVideo[this.currentIndexActive+1].classList.add('active');
+      this.handleMainVideoChange(this.listVideo[this.currentIndexActive+1].childNodes);
+    }else if(this.currentIndexActive == this.listVideo.length-1){
+      this.listVideo[0].classList.add('active');
+      this.handleMainVideoChange(this.listVideo[0].childNodes);
+    }
+  }
+
   updateTimeElapsed() {
     const time = this.formatTime(Math.round(this.video.currentTime));
     this.timeElapsed.innerText = `${time.minutes}:${time.seconds}`;
@@ -423,14 +484,14 @@ export default class MyVideoPlayer extends HTMLElement {
 
   handlePlayButtonChange() {
     if (this.video.paused || this.video.ended) {
-      console.log('pause ou end');
+      //console.log('pause ou end');
       if (this.video.currentTime == this.video.duration) {
         console.log('end')
         this.pauseButton.hidden = true;
         this.playButton.hidden = true;
         this.replayButton.hidden = false;
       } else {
-        console.log('pause');
+        //console.log('pause');
         this.video.play();
         setTimeout(() => {
           this.hideControls();
@@ -476,6 +537,9 @@ export default class MyVideoPlayer extends HTMLElement {
 
   resetKnobs() {
     let allKnobs = this.shadowRoot.querySelectorAll('.knobs-controls');
+    this.filters.forEach(filter => {
+      filter.gain.value = 0;
+    })
     allKnobs.forEach(knobs => {
       let knobChilds = knobs.childNodes;
       knobChilds.forEach(child => {

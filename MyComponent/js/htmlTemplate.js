@@ -79,7 +79,7 @@ const template = /*html*/`
             </div>
           </div>
         </div>
-        <h3 class="video-data title">Raindrops</h3>
+        <h3 class="video-data title" id="main-video-title"></h3>
       </div>
       <div class="sub-mvc-2">
         <button id="hide-knobs" hidden>
