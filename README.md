@@ -62,4 +62,4 @@ J'ai donc choisi pour cet exemple d'effectuer le chargement des vidéo de la pla
 
 ## Interface 
 
-![knobs](./readMe-Assets/resultat.png)
+![UI](./readMe-Assets/resultat.png)
