@@ -9,16 +9,21 @@ Autre ressources utilisées:
 - [HTML5 Video Events and API](https://www.w3.org/2010/05/video/mediaevents.html)
 - [Webaudio-controls](https://g200kg.github.io/webaudio-controls/docs/index.html)
 
-## Fonctionnalité
+## Fonctionnalités implémentées
 
-### Barre de contrôle
+### Contrôle
+
+#### Barre de contrôle
 
 | fonction    | Description                                    |
 | ----------- | ---------------------------------------------- |
-| Play/Pause  | List all new or modified files                 |
-| Restart     | List all new or modified files                 |
-| Next        | Show file differences that haven't been staged |
-| Volume bar  | List all new or modified files                 |
-| Mute/UnMute | Show file differences that haven't been staged |
+| Play/Pause  | Boutton permettant de jouer ou mettre en pause la vidéo                 |
+| Restart     | Boutton permettant de rejouer la video lorsque la vidéo se termine      |
+| Next        | Boutton permettant de passer à la vidéo suivante (si on arrive à la fin de la playlist, on reprend en tête de liste) |
+| Volume bar  | Bar permettant de gérer le volume de la video                 |
+| Mute/UnMute | Button permettant de couper/remettre le son  |
+| Plein écran | Button permettant d'afficher la vidéo en plein écran ou bien de revenir à la normal  |
+| Progress bar | Bar permettant d'afficher l'état d'avancement de la vidéo et permet de se positionner sur la vidéo  |
+
 
 ![Alt text](./readMe-Assets/Video-Controls.PNG)
