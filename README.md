@@ -14,11 +14,11 @@ Autre ressources utilisées:
 ### Barre de contrôle
 
 | fonction    | Description                                    |
-| ----------- | ---------------------------------------------- | --- | ---- | ------------------------------ |
+| ----------- | ---------------------------------------------- |
 | Play/Pause  | List all new or modified files                 |
 | Restart     | List all new or modified files                 |
 | Next        | Show file differences that haven't been staged |
 | Volume bar  | List all new or modified files                 |
-| Mute/UnMute | Show file differences that haven't been staged |     | Play | List all new or modified files |
+| Mute/UnMute | Show file differences that haven't been staged |
 
-![Alt text](MyComponent/readMe-Assets/Video-Controls.PNG)
+![Alt text](./readMe-Assets/Video-Controls.PNG)
