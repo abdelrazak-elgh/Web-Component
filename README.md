@@ -42,7 +42,7 @@ J'ai donc choisi pour cet exemple d'effectuer le chargement des vidéo de la pla
 | Progress bar | Bar permettant d'afficher l'état d'avancement de la vidéo et permet de se positionner sur la vidéo  |
 
 
-![video controls](./readMe-Assets/Video-Controls.png)
+![video controls](./readMe-Assets/video-controls.png)
 
 #### Raccourcie clavier
 
