@@ -1,7 +1,6 @@
 import { style } from './js/cssTemplate.js';
 import { template } from './js/htmlTemplate.js';
-import { videoList, initPlayList, addVideo } from './js/movieList.js';
-import { visualize2d } from './js/webAudioVisualiseur.js'
+import { videoList, initPlayList } from './js/movieList.js';
 import './js/lib/webaudio-controls.js';
 
 const getBaseURL = () => {
@@ -32,6 +31,9 @@ export default class MyVideoPlayer extends HTMLElement {
     this.rangeInput = this.getSDom('.custom-slider');
     this.progress = this.getSDom('.video-progress');
     this.progressBar = this.getSDom('.video-progress-filled');
+    this.speedChoice = this.getSDom('.speed-choice');
+    this.currentNumberVideo = this.getSDom('#currentNumberVideo');
+    this.playlistLength = this.getSDom('#playlistLength');
 
     // Buttons
     this.playButton = this.getSDom('#play');
@@ -41,7 +43,7 @@ export default class MyVideoPlayer extends HTMLElement {
     this.nextButton = this.getSDom('#next');
     this.fwd5sButton = this.getSDom('#fwd-5s');
     this.mb5sButton = this.getSDom('#mb-5s');
-    //this.spdButton = this.getSDom('#speed');
+    this.spdButton = this.getSDom('#speed');
     this.volumeOn = this.getSDom('#v-on');
     this.volumeOff = this.getSDom('#v-off');
     this.fullScreenButton = this.getSDom('#fullscreen');
@@ -52,11 +54,6 @@ export default class MyVideoPlayer extends HTMLElement {
     this.subMVC1 = this.getSDom('.sub-mvc-1');
     this.subMVC2 = this.getSDom('.sub-mvc-2');
 
-    this.displaySoundGraph = this.getSDom('#display-sound-graph');
-    this.hideSoundGraph = this.getSDom('#hide-sound-graph');
-    this.subVLC1 = this.getSDom('.sub-vlc-1');
-    this.subVLC2 = this.getSDom('.sub-vlc-2');
-
     this.knobsDiv = this.getSDom('.knobs-div');
     this.knob1 = this.getSDom('#knb1');
     this.knob2 = this.getSDom('#knb2');
@@ -65,10 +62,20 @@ export default class MyVideoPlayer extends HTMLElement {
     this.knob5 = this.getSDom('#knb5');
     this.knob6 = this.getSDom('#knb6');
 
+    // 2d graph
+    this.displaySoundGraph = this.getSDom('#display-sound-graph');
+    this.hideSoundGraph = this.getSDom('#hide-sound-graph');
+    this.subVLC1 = this.getSDom('.sub-vlc-1');
+    this.subVLC2 = this.getSDom('.sub-vlc-2');
 
-    // initialisation du volume de la video par default
+
+    // initialization of the volume of the video by default
     this.video.volume = this.rangeInput.value;
 
+    // boolean which allow to manage the display of the speed volume table
+    this.speedDisplayed = false;
+
+    // Array to manage volume frequencies
     this.filters = [];
 
     this.audioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
@@ -81,9 +88,14 @@ export default class MyVideoPlayer extends HTMLElement {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
+
+    this.playlistLength.innerText = this.listVideo.length;
+
     this.addFirstVideoToPlayer();
 
+    // function which manage all the event listeners
     this.listenerConfiguration();
+
 
     this.buildAudioGraph();
 
@@ -137,7 +149,6 @@ export default class MyVideoPlayer extends HTMLElement {
 
     // create the equalizer. It's a set of biquad Filters
 
-
     // Set filters
     [60, 170, 350, 1000, 3500, 10000].forEach((freq, i) => {
       let eq = this.audioContext.createBiquadFilter();
@@ -168,11 +179,14 @@ export default class MyVideoPlayer extends HTMLElement {
     output.value = value + ' dB';
   }
 
+  // get element from shadow dom
   getSDom(selector) {
     return this.shadowRoot.querySelector(selector);
   }
 
+  // Manage all event listeners
   listenerConfiguration() {
+    // Prevent the scrolling og the page when pushing the space bar
     window.onkeydown = function (e) {
       return !(e.keyCode == 32 && e.target == document.body);
     };
@@ -194,17 +208,51 @@ export default class MyVideoPlayer extends HTMLElement {
       this.handleVideoChange();
     }
 
+    // move back 5 seconds
     this.mb5sButton.onclick = () => {
       this.moveBack5s();
     }
 
+    // move forward 5 seconds
     this.fwd5sButton.onclick = () => {
       this.forward5s();
     }
 
-    /*this.spdButton.onclick = () => {
-      this.speed();
-    }*/
+    this.spdButton.onclick = () => {
+      if (this.speedDisplayed) { // boolean to manage the display of speed volume table
+        this.speedDisplayed = false;
+        this.speedChoice.style.visibility = 'hidden';
+        setTimeout(() => {
+          this.hideControls();
+        }, 1000);
+      } else {
+        this.speedDisplayed = true;
+        this.speedChoice.style.visibility = 'visible';
+        this.showControls();
+      }
+    }
+
+    // Event on all p elements of the speed volume div (table) 
+    // and manage the css display of the option selected
+    this.speedChoice.childNodes.forEach(child => {
+      child.onclick = () => {
+        for (let i = 0; i < this.speedChoice.children.length; i++) {
+          this.speedChoice.children[i].classList.remove('active')
+        }
+        child.classList.add('active');
+        if (child.textContent == 'Normal') {
+          this.video.playbackRate = 1;
+        } else {
+          this.video.playbackRate = child.textContent;
+        }
+        this.speedDisplayed = false;
+        this.speedChoice.style.visibility = 'hidden';
+        setTimeout(() => {
+          this.hideControls();
+        }, 3000);
+      }
+    });
+
 
     this.volumeOn.onclick = () => {
       this.mute();
@@ -256,14 +304,16 @@ export default class MyVideoPlayer extends HTMLElement {
       this.subVLC2.style.height = '3%';
     }
 
-    this.listVideo.forEach(video => {
-      video.onclick = () => {
+    for(let i = 0; i < this.listVideo.length; i++) {
+      this.listVideo[i].onclick = () => {
+        this.currentNumberVideo.innerText = i+1 + ' / ';
         this.listVideo.forEach(vid => vid.classList.remove('active'));
-        video.classList.add('active');
-        this.handleMainVideoData(video.childNodes);
+        this.listVideo[i].classList.add('active');
+        this.handleMainVideoData(this.listVideo[i].childNodes);
       }
-    });
+    }
 
+    // Event on the video progress bar
     this.progress.onclick = (e) => {
       this.handleInputProgress(e);
     }
@@ -273,6 +323,7 @@ export default class MyVideoPlayer extends HTMLElement {
       this.resetKnobs();
     }
 
+    // Event on the video ending
     this.video.onended = () => {
       this.handlePlayButtonChange();
     }
@@ -294,10 +345,12 @@ export default class MyVideoPlayer extends HTMLElement {
       this.updateProgressBar();
     }
 
+    // Event on the range volume
     this.rangeInput.oninput = (e) => {
       this.handleInputChange(e);
     }
 
+    // Event on the variation of knobs button
     this.knob1.oninput = () => {
       this.changeGain(this.knob1.value, 0);
     }
@@ -327,33 +380,35 @@ export default class MyVideoPlayer extends HTMLElement {
     }
   }
 
+  // Move forward 5 seconds
   forward5s() {
     this.video.currentTime += 5;
   }
 
+  // Move back 5 seconds
   moveBack5s() {
     this.video.currentTime -= 5;
   }
 
-  /*speed() {
-    this.video.playbackRate += 0.5;
-  }*/
-
+  // Mute the sound
   mute() {
     this.currentVolume = this.video.volume;
     this.video.volume = 0;
     this.rangeInput.value = 0;
   }
 
+  // Unmute the sound
   unMute() {
     this.video.volume = this.currentVolume;
     this.rangeInput.value = this.currentVolume;
   }
 
+  // reset the video to zero
   resetVideo() {
     this.video.currentTime = 0;
   }
 
+  // Manage the fullscreen video
   fullScreen() {
     if (document.fullscreenElement) {
       document.exitFullscreen();
@@ -366,14 +421,17 @@ export default class MyVideoPlayer extends HTMLElement {
     }
   }
 
+  // Display the video controls bar
   showControls() {
     this.videoControls.style.transform = 'translateY(0)';
   }
 
+  // Hide the video control bar
   hideControls() {
     this.videoControls.style.removeProperty('transform');
   }
 
+  // Manage to convert time to the format 00:00
   formatTime(timeInSeconds) {
     let result = new Date(timeInSeconds * 1000).toISOString().substr(11, 8);
     return {
@@ -382,6 +440,10 @@ export default class MyVideoPlayer extends HTMLElement {
     };
   }
 
+  /**
+   * Add the first source video of the playlist to the main video
+   * Set the active video, set the source et video information
+   */
   addFirstVideoToPlayer() {
     this.listVideo[0].classList.add('active');
     let firstChild = this.listVideo[0].childNodes;
@@ -401,6 +463,9 @@ export default class MyVideoPlayer extends HTMLElement {
     });
   }
 
+  /**
+   * Manage to initialise all video's parameters and html elements
+   */
   initializeVideo() {
     this.pauseButton.hidden = true;
     this.playButton.hidden = false;
@@ -412,6 +477,10 @@ export default class MyVideoPlayer extends HTMLElement {
     this.handlePlayButtonChange();
   }
 
+  /**
+   * Manage the main video data (source video and title)
+   * @param {*} element → take as parameters chilnodes of an element of listvideo
+   */
   handleMainVideoData(element) {
     element.forEach(node => {
       if (node.nodeName.toLowerCase() == 'video') {
@@ -427,26 +496,39 @@ export default class MyVideoPlayer extends HTMLElement {
         });
       }
     });
+
+    // Reset the selection to normal in the audio speed choice div.
+    for (let i = 0; i < this.speedChoice.children.length; i++) {
+      if(this.speedChoice.children[i].textContent == 'Normal') {
+        this.speedChoice.children[i].classList.add('active')
+      } else {
+        this.speedChoice.children[i].classList.remove('active')
+      }
+    }
+
   }
 
+  /**
+   * Function called on the next button
+   */
   handleVideoChange() {
-    this.currentIndexActive = 0;
-    let i = 0;
-
-    this.listVideo.forEach(vid => {
-      if (vid.classList.contains('active')) {
+    // loop to get the current index of the selected video
+    for(let i = 0; i < this.listVideo.length; i++) {
+      if(this.listVideo[i].classList.contains('active')){
         this.currentIndexActive = i;
       }
-      i++;
-    });
+    }
+
     this.listVideo.forEach(vid => vid.classList.remove('active'));
 
-    if (this.currentIndexActive < this.listVideo.length - 1) {
+    if (this.currentIndexActive < this.listVideo.length - 1) { // if true, we go to the next video
       this.listVideo[this.currentIndexActive + 1].classList.add('active');
       this.handleMainVideoData(this.listVideo[this.currentIndexActive + 1].childNodes);
-    } else {
+      this.currentNumberVideo.innerText = this.currentIndexActive+2 + ' / ';
+    } else { // return to the top of the list
       this.listVideo[0].classList.add('active');
       this.handleMainVideoData(this.listVideo[0].childNodes);
+      this.currentNumberVideo.innerText = 1 + ' / ';
     }
   }
 
@@ -462,7 +544,7 @@ export default class MyVideoPlayer extends HTMLElement {
 
   handlePlayButtonChange() {
     if (this.video.paused || this.video.ended) {
-      if (this.video.currentTime == this.video.duration) {
+      if (this.video.currentTime == this.video.duration) { // if video ended we display the replay button
         this.pauseButton.hidden = true;
         this.playButton.hidden = true;
         this.replayButton.hidden = false;
@@ -484,6 +566,11 @@ export default class MyVideoPlayer extends HTMLElement {
     }
   }
 
+  /**
+   * Manage the volume bar display
+   * @param {*} element 
+   * @param {*} value 
+   */
   handleRangeUI(element, value) {
     if (value < 0.1) {
       this.volumeOn.hidden = true;
@@ -495,6 +582,7 @@ export default class MyVideoPlayer extends HTMLElement {
     element.style.backgroundSize = (value - element.min) * 100 / (element.max - element.min) + '% 100%';
   }
 
+  // Manage the information obtained on the volume bar when we click on the cursor
   handleInputChange(e) {
     let target = e.target;
     const min = target.min
@@ -509,6 +597,9 @@ export default class MyVideoPlayer extends HTMLElement {
     this.video.currentTime = progressTime;
   }
 
+  /**
+   * Mange to reset the knobs parameters
+   */
   resetKnobs() {
     let allKnobs = this.shadowRoot.querySelectorAll('.knobs-controls');
     this.filters.forEach(filter => {
@@ -527,6 +618,10 @@ export default class MyVideoPlayer extends HTMLElement {
     });
   }
 
+  /**
+   * link keyboard key to video function
+   * @param {*} event 
+   */
   keyboardShortcuts(event) {
     const { key } = event;
     switch (key) {

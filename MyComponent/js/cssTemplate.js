@@ -34,7 +34,7 @@ i {
 
 .elements * {
   margin: 0 0.5em;
-  font-size: 1vw;
+  //font-size: 1vw;
 }
 
 .title {
@@ -48,7 +48,7 @@ i {
 .duree {
   display: flex;
   justify-content: flex-end;
-  font-size: .8vw;
+  font-size: 1vw;
 }
 
 .author {
@@ -68,6 +68,10 @@ i {
   grid-gap: 1vw;
   padding: 2vw 5vw;
   height: 100%;
+  //background: rgba(255,255,255,1);
+  //background: linear-gradient(#FF9F4A, #FF3C83); 
+  background: linear-gradient(#FED54A, #FF9347);
+  background-repeat: no-repeat;
 }
 
 /* ######### END PARENT CONTAINER ######### */
@@ -119,7 +123,7 @@ i {
 
 .container .main-video-container .sub-mvc-2 button {
   border-radius: 0 0 5px 5px;
-  background: rgba(57, 68, 247, .8);
+  background: rgba(91, 84, 250, 1); 
   width: 100%;
   height: 100%;
 }
@@ -202,7 +206,7 @@ i {
 
 .container .main-video-container .sub-mvc-1 .video-container 
 .video-controls .control-items .control-bar-left .time {
-  font-size: 0.8em;
+  font-size: 1vw;
   color: #fff;
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
@@ -213,21 +217,22 @@ i {
 
     /* --------- CONTROL BUTTON --------- */
 
-#play, #pause, #fullscreen, #mb-5s, #fwd-5s {
+#play, #pause, #replay, #fullscreen, #mb-5s, #fwd-5s, #v-on, #v-off, #next, #speed {
   padding: 0.6vw;
+  font-size: 1vw;
 }
 
 #v-off {
   padding-right: 1vw;
 }
 
-.btooltip {
+.btooltip, .speed-menu {
   position: relative;
 }
 
 .btooltip .tooltiptext {
   visibility: hidden;
-  width: 10vw;
+  width: 5vw;
   font-size: .8vw;
   background-color: rgba(0,0,0,.6);
   color: #fff;
@@ -237,12 +242,44 @@ i {
   position: absolute;
   bottom: 150%;
   left: 50%;
-  margin-left: -5vw;
+  margin-left: -2.5vw;
 }
 
 .btooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.speed-menu .speed-choice {
+  visibility: hidden;
+  width: 10vw;
+  font-size: .8vw;
+  background-color: rgba(0,0,0,.6);
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  bottom: 150%;
+  left: 30%;
+  margin-left: -5vw;
+}
+
+.speed-choice p{
+  display: flex;
+  width: 100%;
+  self-align: flex-start;
+  margin: 0;
+  padding: 0.2vw 0.2vw 0.2vw 1vw;
+}
+
+.speed-choice p:hover{
+  background-color: rgba(255,255,255,.4);
+}
+
+.speed-choice p.active{
+  background: rgba(255,255,255,.8);
+  color: #000;
+}
+
 
     /* --------- END CONTROL BUTTON --------- */
 
@@ -361,7 +398,8 @@ i {
 
 .container .video-list-container .sub-vlc-2 button {
   border-radius: 0 0 5px 5px;
-  background: rgba(57, 68, 247, .8);
+  //background: rgba(57, 68, 247, .8);
+  background: rgba(91, 84, 250, 1);
   width: 100%;
   height: 100%;
 }
@@ -386,9 +424,12 @@ i {
 
 
 .container .video-list-container .sub-vlc-1 .header-video-list {
+  display: flex;
+  justify-content: space-between;
   background: rgba(255,255,255,.8);
   border-radius: 5px 5px 0 0;
   padding: 2%;
+  font-size: 1vw;
 }
 
 .container .video-list-container .sub-vlc-1 .video-list {

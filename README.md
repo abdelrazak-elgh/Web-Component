@@ -37,11 +37,12 @@ J'ai donc choisi pour cet exemple d'effectuer le chargement des vidéo de la pla
 | -5s          | Bouton permettant de reculer la vidéo de 5 secondes|
 | Volume bar   | Bar permettant de gérer le volume de la video                 |
 | Mute/UnMute  | Button permettant de couper/remettre le son  |
+| Speed        | Button permettant d'afficher un tableau avec différent choix de vitesse selectionnable  |
 | Plein écran  | Button permettant d'afficher la vidéo en plein écran ou bien de revenir à la normal  |
 | Progress bar | Bar permettant d'afficher l'état d'avancement de la vidéo et permet de se positionner sur la vidéo  |
 
 
-![video controls](./readMe-Assets/Video-Controls.PNG)
+![video controls](./readMe-Assets/Video-Controls.png)
 
 #### Raccourcie clavier
 

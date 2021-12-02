@@ -1,3 +1,6 @@
+/**
+ * Playlist
+ */
 let videoList = [
   {
     src: 'MyComponent/assets/video/Overtaken.mp4',
@@ -51,6 +54,7 @@ let videoList = [
   },
 ];
 
+/*
 let addVideo = (source) => {
   videoList.push(source);
 };
@@ -61,8 +65,12 @@ let deleteVideo = (item) => {
       arr.splice(videoList.indexOf(video), 1);
     }
   });
-};
+};*/
 
+/**
+ * Manage to create dynamicaly the playlist
+ * @param {*} shadow 
+ */
 let initPlayList = (shadow) => {
   let listVideoDiv = shadow.querySelector('.video-list');
   videoList.forEach(source => {
@@ -105,4 +113,4 @@ let initPlayList = (shadow) => {
   });
 };
 
-export { videoList, initPlayList, addVideo };
+export { videoList, initPlayList};
