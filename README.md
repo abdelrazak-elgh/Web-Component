@@ -15,7 +15,6 @@ Autre ressources utilisées:
 - Js → contient le template css et html, le fichier permettant de gérer la liste de vidéo (Pour éviter de surcharger le fichier main.js, j'ai décider de séparer la partie html et css dans des fichier js différent, pour une meilleur visibilité.).
 
 ![arborescence](./readMe-Assets/arborescence.png)
-![arborescence](./readMe-Assets/video-controls.png)
 
 ## Fonctionnalités implémentées
 
@@ -43,7 +42,7 @@ J'ai donc choisi pour cet exemple d'effectuer le chargement des vidéo de la pla
 | Progress bar | Bar permettant d'afficher l'état d'avancement de la vidéo et permet de se positionner sur la vidéo  |
 
 
-![video controls](./readMe-Assets/video-controls.png)
+![video controls](./readMe-Assets/controls.png)
 
 #### Raccourcie clavier
 
