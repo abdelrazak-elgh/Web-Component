@@ -1,10 +1,12 @@
 html {
-  background: linear-gradient(#FF9F4A, #FF3C83);
-  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
 }
 
 body {
   margin:0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
+
+
